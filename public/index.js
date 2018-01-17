@@ -165,16 +165,66 @@ function FirstStep(){
       }
     });
     
-    console.log("Distance price for "+ del.shipper + " : "+distance);
-    console.log("Volume price for "+ del.shipper + " : "+volume);
+    //console.log("Distance price for "+ del.shipper + " : "+distance);
+    //console.log("Volume price for "+ del.shipper + " : "+volume);
     var shippingPrice = distance + volume;
-    console.log("Shipping price for "+ del.shipper + " : "+shippingPrice);
-  
-  
+    //console.log("Shipping price for "+ del.shipper + " : "+shippingPrice);
+    del.price = shippingPrice;
   });
 }
 
+function SecondStep(){
+  /*
+ To be as competitive as possible, convargo decide to have a decreasing pricing for high volumes.
+
+#### New price rules
+
+**price per m3**
+
+* decreases by **10% after 5 m3**
+* decreases by **30% after 10 m3**
+* decreases by **50% after 25 m3**
+*/
+
+deliveries.forEach(element => {
+  if(element.volume > 5 && element.volume <= 10){
+    element.price -= element.price * 10/100;
+  }
+  else if (element.volume > 10 && element.volume <= 50){
+    element.price -= element.price * 30/100;
+  }
+  else if (element.volume > 50){
+    element.price -= element.price * 50/100;
+  }
+});
+}
+
+function ThirdStep(){
+  /*### Step 3 - Give me all your money
+
+  Now, it's time to pay the truckers
+
+  Convargo take a 30% commission on the shipping price to cover their costs.
+
+  #### Commission
+
+  The commission is split like this:
+
+  * **insurance**: half of commission
+  * **the Treasury**: 1€ by 500km range
+  * **convargo**: the rest
+  */
+
+  deliveries.forEach(element => {
+    element.commission = element.price * (30/100)
+    element.commission.insurance = element.commission / 2;
+    element.commission.treasury = Math.trunc(element.distance / 500);
+    element.convargo = element.commission - element.commission.insurance - element.commission.treasury
+  });
+}
 console.log(truckers);
 console.log(deliveries);
 console.log(actors);
 FirstStep();
+SecondStep();
+ThirdStep();
