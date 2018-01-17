@@ -144,6 +144,37 @@ const actors = [{
   }]
 }];
 
+function FirstStep(){
+  //Write JS code that generates the shpping price for each `shipper` from `index.js` file.
+  //**distance component**: the number of kilometers multiplied by the trucker price per km
+  //**volume component**: the used volume multiplied by the trucker price per m3
+  //shipping price = distance + volume
+
+  var distance = 0;
+  var volume = 0;
+  var trucker;
+
+  deliveries.forEach(del => {
+
+    distance = del.distance
+    volume = del.volume;
+    truckers.forEach(element => {
+      if(element.id == del.truckerId){
+        distance = distance * element.pricePerKm
+        volume = volume * element.pricePerVolume
+      }
+    });
+    
+    console.log("Distance price for "+ del.shipper + " : "+distance);
+    console.log("Volume price for "+ del.shipper + " : "+volume);
+    var shippingPrice = distance + volume;
+    console.log("Shipping price for "+ del.shipper + " : "+shippingPrice);
+  
+  
+  });
+}
+
 console.log(truckers);
 console.log(deliveries);
 console.log(actors);
+FirstStep();
