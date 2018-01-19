@@ -222,9 +222,33 @@ function ThirdStep(){
     element.convargo = element.commission - element.commission.insurance - element.commission.treasury
   });
 }
+
+  function SearchTrucker(id){
+    truckers.forEach(element => {
+      if(element.id == id){
+        return element;
+      }
+    });
+  }
+  function FourthStep(){
+    /*
+    The deductible
+
+    The driver is charged an additional 1€/m3 when he chooses the deductible reduction option.
+
+    The additional charge goes to convargo, not to the trucker.
+    */
+    deliveries.forEach(element => {
+      var trucker = SearchTrucker(element.truckerId);
+      if(trucker.options.deductibleReduction){
+        element.price += element.volume;
+      }
+    });
+  }
 console.log(truckers);
 console.log(deliveries);
 console.log(actors);
 FirstStep();
 SecondStep();
 ThirdStep();
+FourthStep();
